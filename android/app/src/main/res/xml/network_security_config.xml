@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cleartext (http://) is required for two on-LAN peers: the ESP32-S3 glasses'
+  MJPEG stream and the local Home Assistant API. Both live at DHCP-assigned
+  IPs discovered at runtime (BLE pairing / HA onboarding), so they can't be
+  pinned to fixed hostnames here — Android's network-security-config has no
+  CIDR/subnet syntax, only exact domain/IP matches. Cleartext is therefore
+  allowed app-wide; GlassesManager and SmartHomeManager are the only callers
+  that ever use http:// (Gary cloud traffic is always https://).
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

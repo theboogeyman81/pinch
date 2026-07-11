@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Compose owns all real theming (core/theme/GaryTheme.kt). This XML theme
+      only exists to satisfy the Android launch-theme requirement (splash
+      background before Compose takes over) — keep it minimal.
+    -->
+    <style name="Theme.Gary" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
