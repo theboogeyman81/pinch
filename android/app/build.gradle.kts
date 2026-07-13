@@ -74,6 +74,17 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
 
+    // Vision — MediaPipe Hands + YOLOv8n TFLite. OpenCV/ArUco intentionally NOT
+    // wired here — out of scope until device-recognition work starts.
+    implementation(libs.mediapipe.tasks.vision)
+    implementation(libs.tflite.support)
+
+    // CameraX — v0 phone-camera frame source (ADR-010), substitutes for the
+    // ESP32 MJPEG stream until glasses hardware exists.
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)

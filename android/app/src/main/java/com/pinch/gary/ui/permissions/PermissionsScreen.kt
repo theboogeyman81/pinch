@@ -24,16 +24,19 @@ import androidx.core.content.ContextCompat
 import com.pinch.gary.core.permissions.RequiredPermissions
 
 /**
- * Semi-real for week 1-2: only requests what glasses/ needs (BLE +
- * notifications). Location is requested here too since SmartHomeManager
- * (week 9-10) will need it, but its "am I home?" logic isn't wired up yet —
- * granting it early avoids a second interruption later.
+ * Requests what glasses/ needs (BLE + notifications), what vision/ needs
+ * (camera — v0 phone-camera substitute per ADR-010), and location. Location
+ * is requested here too since SmartHomeManager (week 9-10) will need it, but
+ * its "am I home?" logic isn't wired up yet — granting it early avoids a
+ * second interruption later.
  */
 @Composable
 fun PermissionsScreen(onAllGranted: () -> Unit) {
     val context = LocalContext.current
     val permissionsToRequest = remember {
-        (RequiredPermissions.forGlasses + RequiredPermissions.location).distinct().toTypedArray()
+        (RequiredPermissions.forGlasses + RequiredPermissions.location + RequiredPermissions.forVision)
+            .distinct()
+            .toTypedArray()
     }
 
     var allGranted by remember {
@@ -60,7 +63,8 @@ fun PermissionsScreen(onAllGranted: () -> Unit) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Gary needs Bluetooth and location access to find your glasses.",
+                text = "Gary needs Bluetooth, location, and camera access to find your glasses " +
+                    "and recognize gestures.",
                 style = MaterialTheme.typography.bodyLarge
             )
             Button(

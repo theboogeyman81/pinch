@@ -42,3 +42,11 @@ Per CLAUDE.md's note that the Android emulator is unreliable for BLE/camera test
 ## ADR-009: compileSdk/targetSdk pinned to 34, not 35
 
 The plan originally called for 35, but the dev machine's local Android SDK only has platform 34 installed (no `cmdline-tools`/`sdkmanager` available to auto-fetch 35 during Gradle sync). Pinned to 34 so the scaffold builds offline against what's actually installed. Bump to 35 once platform 35 + build-tools are installed via Android Studio's SDK Manager — nothing in the code depends on 35-specific APIs yet.
+
+## ADR-010: Gesture input is camera-only (MediaPipe) for v0, radar deferred to v1 hardware
+
+CLAUDE.md originally specced BGT60TR13C radar as the primary gesture input, replacing a second camera entirely. No radar hardware (or any glasses hardware) exists yet — only the software prototype is being built right now. Decision: build `GestureRecognizer` against MediaPipe hand landmarks only for v0, using the phone's own camera via `VisionEngine`. Radar stays the plan for the next hardware prototype, not this one.
+
+To avoid rework when radar arrives: `GestureRecognizer` takes its input through a `GestureSource` interface (or equivalent seam) so the command-mapping/debounce logic doesn't care whether events came from MediaPipe landmarks or radar BLE events. When hardware lands, radar becomes another `GestureSource` implementation — CLAUDE.md's "radar primary, MediaPipe fallback" plan is unchanged for v1, it's just not what v0 builds against.
+
+**Revisit when:** BGT60TR13C breakout board is in hand and wired to the ESP32 (see CLAUDE.md's open questions).

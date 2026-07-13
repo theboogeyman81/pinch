@@ -55,7 +55,7 @@ gary-product/
 │                                                                 │
 │  GlassesManager    BLE + MJPEG, auto-reconnect, LED control    │
 │  VisionEngine      MediaPipe Hands + YOLOv8n TFLite + ArUco   │
-│  GestureRecognizer Radar BLE events → Gary commands            │
+│  GestureRecognizer MediaPipe landmarks → Gary commands (v0)    │
 │  VoiceSession      LiveKit room, mic, bone conduction output   │
 │  GaryClient        WebSocket to cloud event bus                │
 │  SmartHomeManager  HA local relay → Nabu Casa when away        │
@@ -194,7 +194,9 @@ Runs ML inference on every MJPEG frame on a background coroutine. All local — 
 Never write frames to disk. 3–5 frame ring buffer in RAM (~250KB max).
 
 #### GestureRecognizer
-Converts radar BLE events (primary) or MediaPipe landmarks (fallback) into Gary commands. Stateful — tracks gesture history across events. Debounce prevents multi-fire from one gesture.
+**v0 (current, no radar hardware yet):** converts MediaPipe hand landmarks (from the phone-side VisionEngine) into Gary commands. This is camera-based only for now.
+**v1 (next hardware prototype):** once BGT60TR13C radar breakout is on the ESP32, radar BLE events become the primary input, with MediaPipe landmarks as fallback (works in the dark, lower latency, no camera dependency).
+Stateful — tracks gesture history across events. Debounce prevents multi-fire from one gesture. Design the input as an interface (`GestureSource`) so swapping/adding radar later doesn't require touching the command-mapping logic.
 
 #### VoiceSession
 Wraps LiveKit. Full voice pipeline:
@@ -488,7 +490,7 @@ See `hardware/` directory. Custom PCB (KiCad), BGT60TR13C radar prototype, OV564
 | TTS | Cartesia (not ElevenLabs) | 78% cheaper — ElevenLabs would be $18/user/month on TTS alone |
 | LLM | Gemini 2.5 Flash | Already in Gary stack, best capability/cost ratio |
 | STT | Deepgram Nova-3 | <300ms, already proven in Gary_2 |
-| Gesture input | BGT60TR13C radar | Replaces hand camera — no camera means no MediaPipe needed for gestures |
+| Gesture input | MediaPipe hand landmarks (v0) → BGT60TR13C radar (v1) | No radar hardware yet; camera-based gestures via phone's VisionEngine for the current prototype. Radar planned for next hardware rev — replaces camera dependency, works in the dark |
 | Smart home | HA as relay (phone) | Avoids NAT problem, Nabu Casa for away |
 | Data storage | Text summaries only, never raw audio/video | Privacy architecture + avoid catastrophic storage bills |
 | Subscription price | $24–29/month | ~40–60% gross margin at $12–18 COGS |

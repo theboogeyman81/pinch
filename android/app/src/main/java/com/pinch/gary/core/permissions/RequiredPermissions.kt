@@ -19,6 +19,9 @@ object RequiredPermissions {
 
     val microphone: Array<String> = arrayOf(Manifest.permission.RECORD_AUDIO)
 
+    /** vision/'s phone-camera frame source (v0 substitute for the glasses camera — ADR-010). */
+    val camera: Array<String> = arrayOf(Manifest.permission.CAMERA)
+
     val location: Array<String> = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -38,4 +41,7 @@ object RequiredPermissions {
 
     /** Permissions the glasses/ feature (week 1-2) needs to function at all. */
     val forGlasses: Array<String> = ble + notifications
+
+    /** Permissions the vision/ feature (week 3-4) needs — camera-only v0 per ADR-010. */
+    val forVision: Array<String> = camera
 }
